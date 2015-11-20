@@ -1,34 +1,56 @@
-var megers = require('./merges.js');
+var crypto = require('crypto');
+var mongoose = require('mongoose');
+var merges = require('./merges.js');
+mongoose.connect('mongodb://localhost/blog');
+
+
+function car(){
+	this.name=String;
+	this.password=String;
+	this.email=String;
+	this.head=String;
+	this.time=Date;
+	this.old =Number;
+}
+
+var car_Schema = new mongoose.Schema(new car(),{collection:'cars'}) ;
+var car_Model = mongoose.model('cars',car_Schema);
+var export_car = merges.create(car,car_Model);
+module.exports = export_car;
+
 
 var req = {
 	query:{
-		name:"sdfsdf"
+		head:'http://www.baidu.com'
 	},
 	param:{
-		name:'luoli',
-		gender:'woman',
-		old:'123',
-		time:"2015-10-5"
+		password:'passw0rd',
+		old:17
 	},	
 	body:{
-		name:'aboluo',
-		address:'kexuedadao',
-		like:"问题的功能或"
+		
+		email:'892323@qq.com',
+		name:'andel',
+		time:'2014-12-1'
 	}
 }
 
-function User(name,gender,old){
-	this.name = String;
-	this.gender = String;
-	this.like = String;
-	this.old = Number;
-	this.time = Date;
-	this.address = String;
-	this.do = function(){
-		console.log("my name is "+this.name);
-	}
+var car = merges.copy(req,export_car);
+// export_car.find(null,function(err,docs){
+// 	console.log(docs);
+// });
+
+var query = {
+	name:'shitailong'
 }
 
-var user =  megers.copy(req,User);
-console.log(user);
-user.do();
+export_car.findOne({
+	"old":{"$gt":10}
+},function(err,doc){
+	console.log(err,doc);
+});
+
+
+
+
+
